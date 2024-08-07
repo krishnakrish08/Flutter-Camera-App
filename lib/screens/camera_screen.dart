@@ -116,13 +116,13 @@ class CameraScreenState extends State<CameraScreen>
   Future<void> _startVideoPlayer() async {
     if (_videoFile != null) {
       videoController = VideoPlayerController.file(_videoFile!);
-      await videoController!.initialize().then((_) {
+      await videoController?.initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized,
         // even before the play button has been pressed.
         setState(() {});
       });
-      await videoController!.setLooping(true);
-      await videoController!.play();
+      await videoController?.setLooping(true);
+      await videoController?.play();
     }
   }
 
@@ -135,7 +135,7 @@ class CameraScreenState extends State<CameraScreen>
     }
 
     try {
-      await cameraController!.startVideoRecording();
+      await cameraController?.startVideoRecording();
       setState(() {
         _isRecordingInProgress = true;
         debugPrint('Recording -- $_isRecordingInProgress');
@@ -152,7 +152,7 @@ class CameraScreenState extends State<CameraScreen>
     }
 
     try {
-      XFile file = await controller!.stopVideoRecording();
+      XFile? file = await controller?.stopVideoRecording();
       setState(() {
         _isRecordingInProgress = false;
       });
@@ -170,7 +170,7 @@ class CameraScreenState extends State<CameraScreen>
     }
 
     try {
-      await controller!.pauseVideoRecording();
+      await controller?.pauseVideoRecording();
     } on CameraException catch (e) {
       debugPrint('Error pausing video recording: $e');
     }
@@ -183,7 +183,7 @@ class CameraScreenState extends State<CameraScreen>
     }
 
     try {
-      await controller!.resumeVideoRecording();
+      await controller?.resumeVideoRecording();
     } on CameraException catch (e) {
       debugPrint('Error resuming video recording: $e');
     }
@@ -256,8 +256,8 @@ class CameraScreenState extends State<CameraScreen>
       details.localPosition.dx / constraints.maxWidth,
       details.localPosition.dy / constraints.maxHeight,
     );
-    controller!.setExposurePoint(offset);
-    controller!.setFocusPoint(offset);
+    controller?.setExposurePoint(offset);
+    controller?.setFocusPoint(offset);
   }
 
   @override
@@ -306,17 +306,17 @@ class CameraScreenState extends State<CameraScreen>
                           children: [
                             CameraPreview(
                               controller!,
-                              child: LayoutBuilder(builder:
-                                  (BuildContext context,
-                                      BoxConstraints constraints) {
-                                return GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTapDown: (details) =>
-                                      onViewFinderTap(details, constraints),
-                                );
-                              }),
+                              child: LayoutBuilder(
+                                builder: (BuildContext context,
+                                    BoxConstraints constraints) {
+                                  return GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTapDown: (details) =>
+                                        onViewFinderTap(details, constraints),
+                                  );
+                                },
+                              ),
                             ),
-                            
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
                                 16.0,
@@ -358,13 +358,16 @@ class CameraScreenState extends State<CameraScreen>
                                                     color: Colors.white,
                                                   ),
                                                 ),
-                                              )
+                                              ),
                                           ],
                                           onChanged: (value) {
-                                            setState(() {
-                                              currentResolutionPreset = value!;
-                                              _isCameraInitialized = false;
-                                            });
+                                            setState(
+                                              () {
+                                                currentResolutionPreset =
+                                                    value!;
+                                                _isCameraInitialized = false;
+                                              },
+                                            );
                                             onNewCameraSelected(
                                                 controller!.description);
                                           },
@@ -405,11 +408,13 @@ class CameraScreenState extends State<CameraScreen>
                                           activeColor: Colors.white,
                                           inactiveColor: Colors.white30,
                                           onChanged: (value) async {
-                                            setState(() {
-                                              _currentExposureOffset = value;
-                                            });
-                                            await controller!
-                                                .setExposureOffset(value);
+                                            setState(
+                                              () {
+                                                _currentExposureOffset = value;
+                                              },
+                                            );
+                                            await controller
+                                                ?.setExposureOffset(value);
                                           },
                                         ),
                                       ),
@@ -428,8 +433,8 @@ class CameraScreenState extends State<CameraScreen>
                                             setState(() {
                                               _currentZoomLevel = value;
                                             });
-                                            await controller!
-                                                .setZoomLevel(value);
+                                            await controller
+                                                ?.setZoomLevel(value);
                                           },
                                         ),
                                       ),
@@ -473,10 +478,11 @@ class CameraScreenState extends State<CameraScreen>
                                                 setState(() {
                                                   _isCameraInitialized = false;
                                                 });
-                                                onNewCameraSelected(cameras[
-                                                    _isRearCameraSelected
-                                                        ? 1
-                                                        : 0]);
+                                                onNewCameraSelected(
+                                                  cameras[_isRearCameraSelected
+                                                      ? 1
+                                                      : 0],
+                                                );
                                                 setState(() {
                                                   _isRearCameraSelected =
                                                       !_isRearCameraSelected;
@@ -491,8 +497,7 @@ class CameraScreenState extends State<CameraScreen>
                                               size: 60,
                                             ),
                                             _isRecordingInProgress
-                                                ? controller!
-                                                        .value.isRecordingPaused
+                                                ? controller!.value.isRecordingPaused
                                                     ? const Icon(
                                                         Icons.play_arrow,
                                                         color: Colors.white,
@@ -728,7 +733,11 @@ class CameraScreenState extends State<CameraScreen>
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
-                                    16.0, 8.0, 16.0, 8.0),
+                                  16.0,
+                                  8.0,
+                                  16.0,
+                                  8.0,
+                                ),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -738,7 +747,7 @@ class CameraScreenState extends State<CameraScreen>
                                         setState(() {
                                           _currentFlashMode = FlashMode.off;
                                         });
-                                        await controller!.setFlashMode(
+                                        await controller?.setFlashMode(
                                           FlashMode.off,
                                         );
                                       },
@@ -755,7 +764,7 @@ class CameraScreenState extends State<CameraScreen>
                                         setState(() {
                                           _currentFlashMode = FlashMode.auto;
                                         });
-                                        await controller!.setFlashMode(
+                                        await controller?.setFlashMode(
                                           FlashMode.auto,
                                         );
                                       },
@@ -772,7 +781,7 @@ class CameraScreenState extends State<CameraScreen>
                                         setState(() {
                                           _currentFlashMode = FlashMode.always;
                                         });
-                                        await controller!.setFlashMode(
+                                        await controller?.setFlashMode(
                                           FlashMode.always,
                                         );
                                       },
@@ -789,7 +798,7 @@ class CameraScreenState extends State<CameraScreen>
                                         setState(() {
                                           _currentFlashMode = FlashMode.torch;
                                         });
-                                        await controller!.setFlashMode(
+                                        await controller?.setFlashMode(
                                           FlashMode.torch,
                                         );
                                       },

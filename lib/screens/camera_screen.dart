@@ -346,7 +346,7 @@ class CameraScreenState extends State<CameraScreen>
                                           value: currentResolutionPreset,
                                           items: [
                                             for (ResolutionPreset preset
-                                                in resolutionPresets)
+                                                in resolutionPresets) ...{
                                               DropdownMenuItem(
                                                 value: preset,
                                                 child: Text(
@@ -359,6 +359,7 @@ class CameraScreenState extends State<CameraScreen>
                                                   ),
                                                 ),
                                               ),
+                                            }
                                           ],
                                           onChanged: (value) {
                                             setState(

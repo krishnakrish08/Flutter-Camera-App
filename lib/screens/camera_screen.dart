@@ -47,6 +47,7 @@ class CameraScreenState extends State<CameraScreen>
 
   ResolutionPreset currentResolutionPreset = ResolutionPreset.high;
 
+  ///Get Camera Permission Status
   getPermissionStatus() async {
     await Permission.camera.request();
     var status = await Permission.camera.status;
@@ -96,6 +97,7 @@ class CameraScreenState extends State<CameraScreen>
     }
   }
 
+  ///Take Picture
   Future<XFile?> takePicture() async {
     final CameraController? cameraController = controller;
 
